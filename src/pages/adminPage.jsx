@@ -5,6 +5,7 @@ import { IoCartOutline, IoMenu, IoClose } from "react-icons/io5";
 import AdminProductPage from "./admin/adminProductPage";
 import AdminUserPage from "./admin/adminUsersPage";
 import AdminAddProductForm from "./admin/adminAddProductForm";
+import AdminEditProductForm from "./admin/adminEditProductForm";
 
 export default function AdminPage() {
     // State to handle the mobile sidebar toggle
@@ -69,6 +70,8 @@ export default function AdminPage() {
                         <IoCartOutline />
                         <span>Users</span>
                     </Link>
+
+                    
                 </div>
             </div>
 
@@ -81,6 +84,7 @@ export default function AdminPage() {
                     <Route path="/products" element={<AdminProductPage/>}/>
                     <Route path="/users" element={<AdminUserPage/>}/> 
                     <Route path="/add-product" element={<AdminAddProductForm/>}/> 
+                    <Route path="/edit-product" element={<AdminEditProductForm/>}/>
                 </Routes>
             </div>    
         </div>

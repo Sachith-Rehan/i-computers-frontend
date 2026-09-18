@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";  
 import api from "../../utils/api";
 import toast from "react-hot-toast";
+import { CiEdit } from "react-icons/ci";
 import LoadingScreen from "../../components/loadingScreen";
 import ProductDeleteButton from "../../components/productDeleteButton";
 export default function AdminProductPage() {
@@ -101,8 +102,14 @@ export default function AdminProductPage() {
                   <td className="px-4 py-3 text-center font-semibold text-gray-700">{product.stock}</td>
 
                   <td className="px-4 py-3">
-                    <div className="flex justify-center items-center">
+                    <div className="flex justify-center items-center gap-5">
+                      
+                      <Link to="/admin/edit-product" state={product}>
+                        <CiEdit className="text-blue-800 hover:text-blue-950 text-xl font-bold cursor-pointer " />
+                      </Link>
+                      
                       <ProductDeleteButton productId={product.productId} refresh={() => setLoading(true)} />
+
                     </div>
                   </td>
                 </tr>
