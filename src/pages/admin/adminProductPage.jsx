@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";  
 import api from "../../utils/api";
-import toast from "react-hot-toast";
+
 import { CiEdit } from "react-icons/ci";
 import LoadingScreen from "../../components/loadingScreen";
 import ProductDeleteButton from "../../components/productDeleteButton";

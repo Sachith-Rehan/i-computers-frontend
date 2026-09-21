@@ -184,7 +184,7 @@ export default function AdminAddProductForm() {
                     </div>
 
                     <div className="w-[25%] h-[100px] rounded-lg p-2 pl-5 pr-5 flex flex-col gap-0.5">
-                        <label className="font-semibold ">Category<span className="italic text-sm text-gray-400"> (optional)</span></label>    
+                        <label className="font-semibold ">Brand<span className="italic text-sm text-gray-400"> (optional)</span></label>    
                         <select value={brand} onChange={(e) => setBrand(e.target.value)} type="text" placeholder=" Enter The Brand"
                         className="h-[35px] bg-transparent border-2 rounded-lg border-gray-400 focus:outline-none focus:border-blue-500" >
                             <option value="asus">Asus</option>

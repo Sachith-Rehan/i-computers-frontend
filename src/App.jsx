@@ -16,7 +16,7 @@ function App() {
     <div className="w-full h-screen bg-red-500">
       <Toaster position='top-right'/>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/*" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />  
         <Route path="/admin/*" element={<AdminPage />} />
