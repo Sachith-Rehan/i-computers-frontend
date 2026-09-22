@@ -2,6 +2,8 @@ import { Routes, Route } from "react-router-dom";
 import  Header from "../components/header";
 import ProductPage from "./productPage";
 import ProductOverViewPage from "./productOverViewPage";
+import CartPage from "./cartPage";
+import CheckoutPage from "./checkoutPage";
 export default function HomePage() {
   return (
     <div>
@@ -13,7 +15,8 @@ export default function HomePage() {
             <Route path="/products" element={<ProductPage/>}/>
             <Route path="/contact-us" element={<p>contact-us</p>}/>
             <Route path="/about-us" element={<p>about-us</p>}/>
-            <Route path="/cart" element={<p>cart</p>}/>
+            <Route path="/cart" element={<CartPage/>}/>
+            <Route path="/checkout" element={<CheckoutPage/>}/>
             <Route path="/overview/:productId" element={<ProductOverViewPage/>}/>
             <Route path="/*" element={<p>404 page</p>}/>
           </Routes>

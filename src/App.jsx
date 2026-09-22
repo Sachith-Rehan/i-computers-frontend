@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
 import './App.css'
-import ProductCard from './components/productCard'
 import HomePage from './pages/homePage.jsx'
 import RegisterPage from './pages/registerPage.jsx'
 import LoginPage from './pages/loginPage.jsx'

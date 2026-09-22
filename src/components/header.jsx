@@ -1,4 +1,5 @@
 import {Link } from "react-router-dom";
+import { FaShoppingCart } from "react-icons/fa";
 export default function Header(){
       return (
             <header className="w-full h-[100px] bg-accent flex items-center p-10 justify-between">
@@ -13,7 +14,9 @@ export default function Header(){
                   </div>
                   
                   <div >
-
+                        <Link to="/cart" className="text-primary text-[1.5rem] font-semibold hover:text-2xl flex">
+                              <FaShoppingCart />
+                        </Link>
                   </div>
             </header>
       )

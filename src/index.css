@@ -5,3 +5,47 @@
   --color-secondary : #181800;
   --color-accent : #001a84;
 }
+
+
+
+
+
+
+
+
+
+
+
+ /* toast apearence animation */
+
+@keyframes toast-enter {
+    0% {
+        opacity: 0;
+        transform: translateX(40px) scale(0.95);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes toast-leave {
+    0% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(40px) scale(0.95);
+    }
+}
+
+.toast-enter {
+    animation: toast-enter 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.toast-leave {
+    animation: toast-leave 0.25s ease-in forwards;
+}

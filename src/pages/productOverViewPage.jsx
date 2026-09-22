@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
     FiArrowLeft,
@@ -11,6 +11,9 @@ import LoadingScreen from "../components/loadingScreen";
 import ProductImageSlideShow from "../components/productImageSlideShow";
 import getFormattedPrice from "../utils/priceFormatter";
 import api from "../utils/api";
+import { addToCart } from "../utils/cart";
+import toast from "react-hot-toast";
+import { showErrorToast, showSuccessToast } from "../utils/toast";
 
 export default function ProductOverViewPage() {
 
@@ -218,6 +221,15 @@ export default function ProductOverViewPage() {
                                         ? "bg-accent text-white hover:opacity-90"
                                         : "bg-gray-200 text-gray-400 cursor-not-allowed"
                                 }`}
+
+                                onClick={() => {
+                                    const success = addToCart(product, 1);
+                                    if(success){
+                                        showSuccessToast("Product added successfully!")
+                                    }else{
+                                        showErrorToast("Unable to add product!")
+                                    }
+                                }}
                             >
                                 <FiShoppingCart size={20} />
 
@@ -230,11 +242,22 @@ export default function ProductOverViewPage() {
 
 
                             {isAvailable && (
-                                <button
-                                    className="flex-1 h-[52px] rounded-xl font-semibold border-2 border-accent text-accent hover:bg-accent hover:text-white transition"
+                                <Link to="/checkout" state={[
+                                    {
+                                        product: {
+                                            productId : product.productId,
+                                            name : product.name,
+                                            image: product.images[0],
+                                            price : product.price,
+                                            labelledPrice : product.labelledPrice
+                                        }, 
+                                        qty : 1
+                                    }
+                                ]}
+                                     className="flex-1 h-[52px] rounded-xl font-semibold border-2 border-accent text-accent hover:bg-accent hover:text-white transition flex items-center justify-center"
                                 >
                                     Buy Now
-                                </button>
+                                </Link>
                             )}
 
                         </div>
