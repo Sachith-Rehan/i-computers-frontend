@@ -1,231 +1,503 @@
-import { useState } from "react";
 import getCart, { getTotal } from "../utils/cart";
 import getFormattedPrice from "../utils/priceFormatter";
 
-import { FaMinus } from "react-icons/fa";
-import { FaPlus } from "react-icons/fa6";
-import { FiShoppingBag } from "react-icons/fi";
+import {
+    FiArrowLeft,
+    FiShoppingBag,
+    FiShield,
+    FiTruck,
+    FiCheck
+} from "react-icons/fi";
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import CreateOrder from "../components/createOrder";
 
 export default function CheckoutPage() {
 
     const location = useLocation();
+    const navigate = useNavigate();
 
-    // If location.state doesn't exist, use saved cart
-    const data = location.state || getCart();
-
-    const [cart, setCart] = useState(data);
-
-
-    // Decrease quantity
-    const decreaseQuantity = (index) => {
-
-        const newQty = cart[index].qty - 1;
-
-        if (newQty > 0) {
-
-            const newCart = cart.map((item, currentIndex) => {
-
-                if (currentIndex === index) {
-                    return {
-                        ...item,
-                        qty: newQty
-                    };
-                }
-
-                return item;
-            });
-
-            setCart(newCart);
-        }
-    };
-
-
-    // Increase quantity
-    const increaseQuantity = (index) => {
-
-        const newCart = cart.map((item, currentIndex) => {
-
-            if (currentIndex === index) {
-                return {
-                    ...item,
-                    qty: item.qty + 1
-                };
-            }
-
-            return item;
-        });
-
-        setCart(newCart);
-    };
-
-
+    const cart = location.state || getCart();
     const total = getTotal(cart);
 
+    const totalItems = cart.reduce(
+        (total, item) => total + item.qty,
+        0
+    );
 
     return (
-        <div className="w-full min-h-full bg-gray-100 px-4 py-8">
+        <div className="min-h-screen bg-[#f7f8fa]">
 
-            <div className="max-w-[1100px] mx-auto">
+            {/* TOP HEADER */}
+            <div className="bg-white border-b border-gray-200">
+
+                <div
+                    className="
+                        max-w-[1200px]
+                        mx-auto
+                        px-4
+                        sm:px-6
+                        h-[76px]
+                        flex
+                        items-center
+                        justify-between
+                    "
+                >
+
+                    <button
+                        onClick={() => navigate("/cart")}
+                        className="
+                            flex
+                            items-center
+                            gap-2
+                            text-sm
+                            font-medium
+                            text-gray-600
+                            hover:text-accent
+                            transition
+                        "
+                    >
+                        <FiArrowLeft size={19} />
+
+                        Back to Cart
+                    </button>
 
 
-                {/* Page Header */}
-                <div className="mb-7">
+                    <div className="hidden sm:flex items-center gap-2">
 
-                    <h1 className="text-3xl font-bold text-gray-900">
+                        <div
+                            className="
+                                w-7
+                                h-7
+                                rounded-full
+                                bg-accent
+                                text-white
+                                flex
+                                items-center
+                                justify-center
+                            "
+                        >
+                            <FiCheck size={14} />
+                        </div>
+
+                        <div className="w-12 h-[2px] bg-accent" />
+
+                        <div
+                            className="
+                                w-7
+                                h-7
+                                rounded-full
+                                bg-accent
+                                text-white
+                                flex
+                                items-center
+                                justify-center
+                                text-xs
+                                font-semibold
+                            "
+                        >
+                            2
+                        </div>
+
+                        <span className="text-sm font-medium text-gray-700">
+                            Checkout
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {/* PAGE CONTENT */}
+            <div
+                className="
+                    max-w-[1200px]
+                    mx-auto
+                    px-4
+                    sm:px-6
+                    py-8
+                    lg:py-10
+                "
+            >
+
+                {/* TITLE */}
+                <div className="mb-8">
+
+                    <h1
+                        className="
+                            text-2xl
+                            sm:text-3xl
+                            font-bold
+                            text-gray-900
+                        "
+                    >
                         Checkout
                     </h1>
 
-                    <p className="text-gray-500 mt-1">
-                        Review your order before confirming
+                    <p className="text-sm text-gray-500 mt-2">
+                        Review your order before continuing.
                     </p>
 
                 </div>
 
 
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-7">
+                <div
+                    className="
+                        grid
+                        grid-cols-1
+                        lg:grid-cols-[minmax(0,1fr)_380px]
+                        gap-7
+                        xl:gap-9
+                        items-start
+                    "
+                >
 
+                    {/* LEFT */}
+                    <div className="space-y-5">
 
-                    {/* PRODUCTS */}
-                    <div className="flex flex-col gap-4">
+                        {/* ITEMS CARD */}
+                        <div
+                            className="
+                                bg-white
+                                rounded-2xl
+                                border
+                                border-gray-200
+                                shadow-sm
+                                overflow-hidden
+                            "
+                        >
 
-                        {cart.map((cartItem, index) => (
-
+                            {/* CARD HEADER */}
                             <div
-                                key={cartItem.product.productId}
-                                className="bg-white min-h-[170px] rounded-2xl p-5 border border-gray-200 shadow-sm flex gap-5"
+                                className="
+                                    px-5
+                                    sm:px-6
+                                    py-5
+                                    border-b
+                                    border-gray-100
+                                    flex
+                                    items-center
+                                    justify-between
+                                "
                             >
 
-                                {/* Product Image */}
-                                <div className="w-[130px] h-[130px] bg-gray-50 rounded-xl flex items-center justify-center shrink-0">
+                                <div>
 
-                                    <img
-                                        src={cartItem.product.image}
-                                        alt={cartItem.product.name}
-                                        className="w-full h-full object-contain p-3"
-                                    />
+                                    <h2
+                                        className="
+                                            text-lg
+                                            font-bold
+                                            text-gray-900
+                                        "
+                                    >
+                                        Your Order
+                                    </h2>
+
+                                    <p className="text-sm text-gray-400 mt-1">
+                                        {totalItems}{" "}
+                                        {totalItems === 1
+                                            ? "item"
+                                            : "items"}
+                                    </p>
 
                                 </div>
 
 
-                                {/* Product Information */}
-                                <div className="flex-1 flex flex-col">
-
-                                    <h2 className="text-lg font-semibold text-gray-900 line-clamp-2">
-                                        {cartItem.product.name}
-                                    </h2>
-
-
-                                    {/* Prices */}
-                                    <div className="mt-2">
-
-                                        {cartItem.product.labelledPrice >
-                                            cartItem.product.price && (
-
-                                            <p className="text-sm text-gray-400 line-through">
-                                                {getFormattedPrice(
-                                                    cartItem.product.labelledPrice
-                                                )}
-                                            </p>
-                                        )}
-
-                                        <p className="text-lg font-bold text-accent">
-                                            {getFormattedPrice(
-                                                cartItem.product.price
-                                            )}
-                                        </p>
-
-                                    </div>
-
-
-                                    {/* Bottom Section */}
-                                    <div className="mt-auto flex items-center justify-between">
-
-
-                                        {/* Quantity Controller */}
-                                        <div className="h-[38px] border border-gray-300 rounded-full flex items-center overflow-hidden">
-
-                                            <button
-                                                onClick={() =>
-                                                    decreaseQuantity(index)
-                                                }
-                                                disabled={cartItem.qty <= 1}
-                                                className={`w-10 h-full flex items-center justify-center transition ${
-                                                    cartItem.qty <= 1
-                                                        ? "text-gray-300 cursor-not-allowed"
-                                                        : "text-gray-600 hover:bg-gray-100 hover:text-accent"
-                                                }`}
-                                            >
-                                                <FaMinus size={12} />
-                                            </button>
-
-
-                                            <span className="w-10 text-center text-sm font-semibold text-gray-800">
-                                                {cartItem.qty}
-                                            </span>
-
-
-                                            <button
-                                                onClick={() =>
-                                                    increaseQuantity(index)
-                                                }
-                                                className="w-10 h-full flex items-center justify-center text-gray-600 hover:bg-gray-100 hover:text-accent transition"
-                                            >
-                                                <FaPlus size={13} />
-                                            </button>
-
-                                        </div>
-
-
-                                        {/* Product Total */}
-                                        <div className="text-right">
-
-                                            <p className="text-xs text-gray-400">
-                                                Total
-                                            </p>
-
-                                            <p className="font-bold text-gray-900">
-                                                {getFormattedPrice(
-                                                    cartItem.product.price *
-                                                    cartItem.qty
-                                                )}
-                                            </p>
-
-                                        </div>
-
-                                    </div>
-
+                                <div
+                                    className="
+                                        w-10
+                                        h-10
+                                        rounded-xl
+                                        bg-accent/10
+                                        text-accent
+                                        flex
+                                        items-center
+                                        justify-center
+                                    "
+                                >
+                                    <FiShoppingBag size={19} />
                                 </div>
 
                             </div>
 
-                        ))}
 
-                    </div>
+                            {/* PRODUCT LIST */}
+                            <div>
+
+                                {cart.map((cartItem, index) => (
+
+                                    <div
+                                        key={
+                                            cartItem.product.productId
+                                        }
+                                        className={`
+                                            px-5
+                                            sm:px-6
+                                            py-4
+
+                                            ${
+                                                index !==
+                                                cart.length - 1
+                                                    ? "border-b border-gray-100"
+                                                    : ""
+                                            }
+                                        `}
+                                    >
+
+                                        <div
+                                            className="
+                                                flex
+                                                items-center
+                                                gap-4
+                                            "
+                                        >
+
+                                            {/* IMAGE */}
+                                            <div
+                                                className="
+                                                    w-[68px]
+                                                    h-[68px]
+                                                    sm:w-[76px]
+                                                    sm:h-[76px]
+                                                    bg-gray-50
+                                                    border
+                                                    border-gray-100
+                                                    rounded-xl
+                                                    flex
+                                                    items-center
+                                                    justify-center
+                                                    shrink-0
+                                                "
+                                            >
+
+                                                <img
+                                                    src={
+                                                        cartItem
+                                                            .product
+                                                            .image
+                                                    }
+                                                    alt={
+                                                        cartItem
+                                                            .product
+                                                            .name
+                                                    }
+                                                    className="
+                                                        w-full
+                                                        h-full
+                                                        object-contain
+                                                        p-2
+                                                    "
+                                                />
+
+                                            </div>
 
 
-                    {/* ORDER SUMMARY */}
-                    <div>
+                                            {/* INFO */}
+                                            <div
+                                                className="
+                                                    flex-1
+                                                    min-w-0
+                                                "
+                                            >
 
-                        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 lg:sticky lg:top-6">
+                                                <h3
+                                                    className="
+                                                        text-sm
+                                                        sm:text-base
+                                                        font-semibold
+                                                        text-gray-900
+                                                        line-clamp-1
+                                                    "
+                                                >
+                                                    {
+                                                        cartItem
+                                                            .product
+                                                            .name
+                                                    }
+                                                </h3>
 
-                            <div className="flex items-center gap-3">
 
-                                <div className="w-11 h-11 bg-accent/10 rounded-xl flex items-center justify-center text-accent">
+                                                <p
+                                                    className="
+                                                        text-xs
+                                                        text-gray-400
+                                                        mt-1
+                                                    "
+                                                >
+                                                    {
+                                                        cartItem
+                                                            .product
+                                                            .productId
+                                                    }
+                                                </p>
 
-                                    <FiShoppingBag size={21} />
 
+                                                <div
+                                                    className="
+                                                        flex
+                                                        items-center
+                                                        gap-3
+                                                        mt-2
+                                                    "
+                                                >
+
+                                                    <span
+                                                        className="
+                                                            text-xs
+                                                            font-medium
+                                                            text-gray-600
+                                                            bg-gray-100
+                                                            px-2.5
+                                                            py-1
+                                                            rounded-md
+                                                        "
+                                                    >
+                                                        Qty:{" "}
+                                                        {
+                                                            cartItem.qty
+                                                        }
+                                                    </span>
+
+
+                                                    {cartItem.product
+                                                        .labelledPrice >
+                                                        cartItem.product
+                                                            .price && (
+
+                                                        <span
+                                                            className="
+                                                                text-xs
+                                                                text-gray-400
+                                                                line-through
+                                                            "
+                                                        >
+                                                            {getFormattedPrice(
+                                                                cartItem
+                                                                    .product
+                                                                    .labelledPrice
+                                                            )}
+                                                        </span>
+
+                                                    )}
+
+                                                </div>
+
+                                            </div>
+
+
+                                            {/* PRICE */}
+                                            <div className="text-right shrink-0">
+
+                                                <p
+                                                    className="
+                                                        text-sm
+                                                        sm:text-base
+                                                        font-bold
+                                                        text-gray-900
+                                                    "
+                                                >
+                                                    {getFormattedPrice(
+                                                        cartItem
+                                                            .product
+                                                            .price *
+                                                        cartItem.qty
+                                                    )}
+                                                </p>
+
+
+                                                {cartItem.qty > 1 && (
+
+                                                    <p
+                                                        className="
+                                                            text-xs
+                                                            text-gray-400
+                                                            mt-1
+                                                        "
+                                                    >
+                                                        {getFormattedPrice(
+                                                            cartItem
+                                                                .product
+                                                                .price
+                                                        )}
+                                                        {" each"}
+                                                    </p>
+
+                                                )}
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                ))}
+
+                            </div>
+
+                        </div>
+
+
+                        {/* INFORMATION */}
+                        <div
+                            className="
+                                grid
+                                grid-cols-1
+                                sm:grid-cols-2
+                                gap-4
+                            "
+                        >
+
+                            <div
+                                className="
+                                    bg-white
+                                    border
+                                    border-gray-200
+                                    rounded-xl
+                                    p-4
+                                    flex
+                                    gap-3
+                                "
+                            >
+
+                                <div
+                                    className="
+                                        w-10
+                                        h-10
+                                        bg-gray-100
+                                        rounded-lg
+                                        flex
+                                        items-center
+                                        justify-center
+                                        shrink-0
+                                        text-gray-600
+                                    "
+                                >
+                                    <FiTruck size={19} />
                                 </div>
 
                                 <div>
 
-                                    <h2 className="text-xl font-bold text-gray-900">
-                                        Order Summary
-                                    </h2>
+                                    <p
+                                        className="
+                                            text-sm
+                                            font-semibold
+                                            text-gray-800
+                                        "
+                                    >
+                                        Delivery
+                                    </p>
 
-                                    <p className="text-sm text-gray-400">
-                                        {cart.length} products
+                                    <p
+                                        className="
+                                            text-xs
+                                            text-gray-400
+                                            mt-1
+                                        "
+                                    >
+                                        Delivery details will be
+                                        confirmed with your order.
                                     </p>
 
                                 </div>
@@ -233,60 +505,229 @@ export default function CheckoutPage() {
                             </div>
 
 
-                            {/* Summary */}
-                            <div className="mt-7">
+                            <div
+                                className="
+                                    bg-white
+                                    border
+                                    border-gray-200
+                                    rounded-xl
+                                    p-4
+                                    flex
+                                    gap-3
+                                "
+                            >
 
-                                <div className="flex justify-between text-sm">
-
-                                    <span className="text-gray-500">
-                                        Subtotal
-                                    </span>
-
-                                    <span className="font-semibold text-gray-800">
-                                        {getFormattedPrice(total)}
-                                    </span>
-
+                                <div
+                                    className="
+                                        w-10
+                                        h-10
+                                        bg-gray-100
+                                        rounded-lg
+                                        flex
+                                        items-center
+                                        justify-center
+                                        shrink-0
+                                        text-gray-600
+                                    "
+                                >
+                                    <FiShield size={19} />
                                 </div>
 
+                                <div>
 
-                                <div className="flex justify-between text-sm mt-4">
+                                    <p
+                                        className="
+                                            text-sm
+                                            font-semibold
+                                            text-gray-800
+                                        "
+                                    >
+                                        Secure Order
+                                    </p>
 
-                                    <span className="text-gray-500">
-                                        Delivery
-                                    </span>
-
-                                    <span className="text-gray-500">
-                                        Calculated later
-                                    </span>
+                                    <p
+                                        className="
+                                            text-xs
+                                            text-gray-400
+                                            mt-1
+                                        "
+                                    >
+                                        Your order information is
+                                        processed securely.
+                                    </p>
 
                                 </div>
 
                             </div>
 
+                        </div>
 
-                            <div className="border-t border-gray-200 my-6" />
+                    </div>
 
 
-                            {/* Final Total */}
-                            <div className="flex justify-between items-end">
+                    {/* RIGHT SUMMARY */}
+                    <div
+                        className="
+                            bg-white
+                            border
+                            border-gray-200
+                            rounded-2xl
+                            shadow-sm
+                            p-6
+                            lg:sticky
+                            lg:top-6
+                        "
+                    >
 
-                                <span className="font-semibold text-gray-800">
-                                    Total
+                        <h2
+                            className="
+                                text-xl
+                                font-bold
+                                text-gray-900
+                            "
+                        >
+                            Order Summary
+                        </h2>
+
+
+                        <div className="mt-6 space-y-4">
+
+                            <div
+                                className="
+                                    flex
+                                    items-center
+                                    justify-between
+                                "
+                            >
+
+                                <span className="text-sm text-gray-500">
+                                    Items ({totalItems})
                                 </span>
 
-                                <span className="text-2xl font-bold text-accent">
+                                <span
+                                    className="
+                                        text-sm
+                                        font-medium
+                                        text-gray-800
+                                    "
+                                >
                                     {getFormattedPrice(total)}
                                 </span>
 
                             </div>
 
 
-                            {/* Order Button */}
-                            <button
-                                className="w-full h-[50px] mt-7 bg-accent text-white font-semibold rounded-xl hover:opacity-90 transition"
+                            <div
+                                className="
+                                    flex
+                                    items-center
+                                    justify-between
+                                "
                             >
-                                Order Now
-                            </button>
+
+                                <span className="text-sm text-gray-500">
+                                    Delivery
+                                </span>
+
+                                <span
+                                    className="
+                                        text-sm
+                                        font-medium
+                                        text-gray-500
+                                    "
+                                >
+                                    Calculated later
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            className="
+                                border-t
+                                border-gray-200
+                                my-6
+                            "
+                        />
+
+
+                        {/* TOTAL */}
+                        <div
+                            className="
+                                flex
+                                items-end
+                                justify-between
+                            "
+                        >
+
+                            <div>
+
+                                <p
+                                    className="
+                                        text-base
+                                        font-semibold
+                                        text-gray-800
+                                    "
+                                >
+                                    Total
+                                </p>
+
+                                <p
+                                    className="
+                                        text-xs
+                                        text-gray-400
+                                        mt-1
+                                    "
+                                >
+                                    Final amount
+                                </p>
+
+                            </div>
+
+
+                            <p
+                                className="
+                                    text-2xl
+                                    font-bold
+                                    text-accent
+                                "
+                            >
+                                {getFormattedPrice(total)}
+                            </p>
+
+                        </div>
+
+
+                        {/* ORDER COMPONENT */}
+                        <CreateOrder cart={cart} />
+
+
+                        {/* BOTTOM NOTE */}
+                        <div
+                            className="
+                                flex
+                                items-center
+                                justify-center
+                                gap-2
+                                mt-4
+                            "
+                        >
+
+                            <FiShield
+                                size={14}
+                                className="text-gray-400"
+                            />
+
+                            <p
+                                className="
+                                    text-[11px]
+                                    text-gray-400
+                                "
+                            >
+                                Secure checkout
+                            </p>
 
                         </div>
 

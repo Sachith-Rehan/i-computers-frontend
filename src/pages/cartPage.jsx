@@ -350,13 +350,13 @@ export default function CartPage() {
                             </div>
 
 
-                            <button
+                            <Link to="/checkout"
                                 className="w-full h-[52px] bg-accent text-white rounded-xl font-semibold mt-7 flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.99] transition"
                             >
                                 Proceed to Checkout
 
                                 <FiArrowRight size={19} />
-                            </button>
+                            </Link>
 
 
                             <p className="text-xs text-center text-gray-400 mt-4">

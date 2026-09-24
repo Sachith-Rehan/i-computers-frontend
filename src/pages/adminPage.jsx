@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 // Added IoMenu and IoClose for mobile navigation toggling
 import { IoCartOutline, IoMenu, IoClose } from "react-icons/io5"; 
@@ -6,10 +6,23 @@ import AdminProductPage from "./admin/adminProductPage";
 import AdminUserPage from "./admin/adminUsersPage";
 import AdminAddProductForm from "./admin/adminAddProductForm";
 import AdminEditProductForm from "./admin/adminEditProductForm";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminPage() {
     // State to handle the mobile sidebar toggle
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+     const navigate = useNavigate();
+    const token = localStorage.getItem("token");
+
+    useEffect(() => {
+        if (!token) {
+            navigate("/login", { replace: true });
+        }
+    }, [token, navigate]);
+
+    if (!token) {
+        return null;
+    }
 
     // Helper to close sidebar on mobile when a link is clicked
     const handleCloseSidebar = () => setIsSidebarOpen(false);
