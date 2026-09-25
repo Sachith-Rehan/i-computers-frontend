@@ -7,6 +7,7 @@ import AdminUserPage from "./admin/adminUsersPage";
 import AdminAddProductForm from "./admin/adminAddProductForm";
 import AdminEditProductForm from "./admin/adminEditProductForm";
 import { useNavigate } from "react-router-dom";
+import AdminOrdersPage from "./admin/adminOrderPage";
 
 export default function AdminPage() {
     // State to handle the mobile sidebar toggle
@@ -93,7 +94,7 @@ export default function AdminPage() {
             {/* Added pt-20 on mobile to push content below the fixed mobile header */}
             <div className="flex-1 h-full bg-primary p-4 pt-20 md:pt-4 overflow-y-auto" >
                 <Routes>
-                    <Route path="/orders" element={<h1>Orders</h1>}/>
+                    <Route path="/orders" element={<AdminOrdersPage/>}/>
                     <Route path="/products" element={<AdminProductPage/>}/>
                     <Route path="/users" element={<AdminUserPage/>}/> 
                     <Route path="/add-product" element={<AdminAddProductForm/>}/> 

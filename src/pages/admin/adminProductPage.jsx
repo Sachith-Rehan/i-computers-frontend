@@ -16,7 +16,9 @@ export default function AdminProductPage() {
       if(loading) {
         const token = localStorage.getItem("token");
         api.get("/products", {
-          headers: `Bearer ${token}`
+          headers: { 
+            Authorization : `Bearer ${token}`
+          }
         }).then((res) => {
           setProducts(res.data);
           setLoading(false);

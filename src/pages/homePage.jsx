@@ -8,7 +8,10 @@ export default function HomePage() {
   return (
     <div>
       <Header />
-  
+
+      
+
+      <div className=""></div>
       <div className="w-full h-[calc(100vh-100px)] bg-white">
           <Routes>
             <Route path="/" element={<p>Home Page</p>}/>
