@@ -5,6 +5,7 @@ import api from "../../utils/api";
 import getFormattedPrice from "../../utils/priceFormatter";
 import LoadingScreen from "../../components/loadingScreen";
 import { formatDateTime } from "../../utils/timeFormatter";
+import OrderDataModel from "../../components/orderDataModel";
 
 export default function AdminOrdersPage() {
      
@@ -16,27 +17,33 @@ export default function AdminOrdersPage() {
       const [totalPages, setTotalPages] = useState(1);
       //load the date forom backend
       useEffect(() => {
-            if(loading) {
-                  const token = localStorage.getItem("token");
-                  
-                  api.get("/orders/"+pageNumber+"/"+pageSize, {
-                        headers: { 
-                              Authorization : `Bearer ${token}`
-                        }
-                  }).then((res) => {
-                        setOrders(res.data.orders || []);
-                        setTotalOrders(res.data.totalOrders)
-                        setTotalPages(res.data.totalPages)
-                        setLoading(false);
-                  })
-            }  
-      },[loading]
-      );
+            const token = localStorage.getItem("token");
+
+            setLoading(true);
+
+            api.get(`/orders/${pageNumber}/${pageSize}`, {
+                  headers: {
+                        Authorization: `Bearer ${token}`
+                  }
+            })
+            .then((res) => {
+                  setOrders(res.data.orders || []);
+                  setTotalOrders(res.data.totalOrders);
+                  setTotalPages(res.data.totalPages);
+            })
+            .catch((err) => {
+                  console.error(err);
+            })
+            .finally(() => {
+                  setLoading(false);
+            });
+
+      }, [pageNumber, pageSize]);
     
       
     return (
 
-      <div className = "w-full min-h-full flex flex-col items-center">
+      <div className = "w-full min-h-full flex flex-col items-center ">
 
             <div className="w-full min-h-[90px] bg-white shadow-lg rounded-2xl flex items-center justify-between px-6 py-4 border border-gray-100">
             
@@ -84,13 +91,18 @@ export default function AdminOrdersPage() {
                                     <td className="px-4 py-3 text-gray-600">{formatDateTime(order.date)}</td> 
                                     <td className="px-4 py-3 text-center font-semibold text-gray-700">{getFormattedPrice(order.totalAmount)}</td>
                                     <td className="px-4 py-3 text-center">
-                                          <Link
-                                                to={`/admin/orders/${order.orderId}`}
-                                                state={order}
-                                                className="text-blue-600 font-semibold hover:text-blue-800"
-                                          >
-                                                View
-                                          </Link>
+                                         <OrderDataModel
+                                                order={order}
+                                                onStatusChange={(orderId, newStatus) => {
+                                                      setOrders((previousOrders) =>
+                                                            previousOrders.map((item) =>
+                                                                  item.orderId === orderId
+                                                                        ? { ...item, status: newStatus }
+                                                                        : item
+                                                            )
+                                                      );
+                                                }}
+                                          />
                                     </td>
 
                                                                         
@@ -100,13 +112,56 @@ export default function AdminOrdersPage() {
                   </table>
             </div>
 
-            <div className="w-[400px] h-[40px] fixed bottom-4 bg-blue-800 flex items-center">
-                  <select value={pageSize} onChange={(e)=>{setPageSize(Number(e.target.value))}}>
-                        <option value={2}>2 per page</option>
-                        <option value={5}>5 per Page</option>
-                         <option value={10}>10 per page</option>
-                        <option value={20}>20 per Page</option>
-                  </select>
+
+
+
+            {/* page navigation bar */}
+
+            <div className="fixed bottom-5 z-40 bg-white border border-gray-200 shadow-lg rounded-xl px-4 py-3 flex items-center gap-5">
+                  <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-500 font-medium">Show</span>
+
+                        <select value={pageSize} onChange={(e) => {
+                                                                  setPageSize(Number(e.target.value));
+                                                                  setPageNumber(1);
+                                                            }}
+                              className="border border-gray-300 rounded-lg px-3 py-2 text-sm font-medium bg-white text-gray-700 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                        >
+                              <option value={2}>2</option>
+                              <option value={5}>5</option>
+                              <option value={10}>10</option>
+                              <option value={20}>20</option>
+                        </select>
+
+                        <span className="text-sm text-gray-500">per page</span>
+                  </div>
+
+                  <div className="h-7 w-px bg-gray-200"></div>
+
+                  <div className="flex items-center gap-3">
+                        <button
+                              disabled={pageNumber === 1}
+                              onClick={() => setPageNumber(pageNumber - 1)}
+                              className="px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                        >
+                              Previous
+                        </button>
+
+                        <div className="px-3 text-sm font-medium text-gray-600">
+                              Page
+                              <span className="mx-1 text-blue-600 font-bold">{pageNumber}</span>
+                              of
+                              <span className="ml-1 font-bold text-gray-800">{totalPages}</span>
+                        </div>
+
+                        <button
+                              disabled={pageNumber === totalPages}
+                              onClick={() => setPageNumber(pageNumber + 1)}
+                              className="px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                        >
+                              Next
+                        </button>
+                  </div>
             </div>
         
 
