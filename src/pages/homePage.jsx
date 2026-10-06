@@ -4,6 +4,8 @@ import ProductPage from "./productPage";
 import ProductOverViewPage from "./productOverViewPage";
 import CartPage from "./cartPage";
 import CheckoutPage from "./checkoutPage";
+import Footer from "../components/footer";
+
 export default function HomePage() {
   return (
     <div>
@@ -24,7 +26,12 @@ export default function HomePage() {
             <Route path="/*" element={<p>404 page</p>}/>
           </Routes>
       </div>
+
+      <Footer />
+      
     </div>
+
+    
 
   )
 }
