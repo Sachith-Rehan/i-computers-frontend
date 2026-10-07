@@ -5,18 +5,18 @@ import ProductOverViewPage from "./productOverViewPage";
 import CartPage from "./cartPage";
 import CheckoutPage from "./checkoutPage";
 import Footer from "../components/footer";
+import HomeSlideShow from "../components/homePageSlideShow";
+import UserHomePage from "./userHomePage";
 
 export default function HomePage() {
   return (
     <div>
       <Header />
 
-      
-
       <div className=""></div>
       <div className="w-full h-[calc(100vh-100px)] bg-white">
           <Routes>
-            <Route path="/" element={<p>Home Page</p>}/>
+            <Route path="/" element={<UserHomePage/>}/>
             <Route path="/products" element={<ProductPage/>}/>
             <Route path="/contact-us" element={<p>contact-us</p>}/>
             <Route path="/about-us" element={<p>about-us</p>}/>
