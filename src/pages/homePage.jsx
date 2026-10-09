@@ -10,11 +10,11 @@ import UserHomePage from "./userHomePage";
 
 export default function HomePage() {
   return (
-    <div>
+    <div className="min-h-screen bg-gray-900 flex flex-col">
       <Header />
 
       <div className=""></div>
-      <div className="w-full h-[calc(100vh-100px)] bg-white">
+      <div className="w-full min-h-[calc(100vh-100px)] bg-white flex-grow">
           <Routes>
             <Route path="/" element={<UserHomePage/>}/>
             <Route path="/products" element={<ProductPage/>}/>
