@@ -10,22 +10,23 @@ import UserHomePage from "./userHomePage";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col">
+    <div className="min-h-scree flex flex-col">
       <Header />
 
-      <div className=""></div>
-      <div className="w-full min-h-[calc(100vh-100px)] bg-white flex-grow">
-          <Routes>
-            <Route path="/" element={<UserHomePage/>}/>
-            <Route path="/products" element={<ProductPage/>}/>
-            <Route path="/contact-us" element={<p>contact-us</p>}/>
-            <Route path="/about-us" element={<p>about-us</p>}/>
-            <Route path="/cart" element={<CartPage/>}/>
-            <Route path="/checkout" element={<CheckoutPage/>}/>
-            <Route path="/overview/:productId" element={<ProductOverViewPage/>}/>
-            <Route path="/*" element={<p>404 page</p>}/>
-          </Routes>
-      </div>
+      <main className="">
+        <div className="w-full min-h-[calc(100vh-100px)] bg-white flex-grow">
+            <Routes>
+              <Route path="/" element={<UserHomePage/>}/>
+              <Route path="/products" element={<ProductPage/>}/>
+              <Route path="/contact-us" element={<p>contact-us</p>}/>
+              <Route path="/about-us" element={<p>about-us</p>}/>
+              <Route path="/cart" element={<CartPage/>}/>
+              <Route path="/checkout" element={<CheckoutPage/>}/>
+              <Route path="/overview/:productId" element={<ProductOverViewPage/>}/>
+              <Route path="/*" element={<p>404 page</p>}/>
+            </Routes>
+        </div>
+      </main>  
 
       <Footer />
       

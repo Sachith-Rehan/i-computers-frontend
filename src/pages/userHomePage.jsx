@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import HomeSlideShow from "../components/homePageSlideShow";
+import Brands from "../components/brands";
 
 const categories = [
 { name: "Laptops", number: "01", img: "laptop.webp", description: "Power meets portability." },
@@ -8,6 +9,10 @@ const categories = [
 { name: "Workstation", number: "04", img: "workstation.png", description: "Performance without limits." },
 { name: "Accessories", number: "05", img: "accessories.jpg", description: "Complete your setup." },
 ];
+
+const brands = [
+  
+]
 
 export default function UserHomePage() {
   return ( 
@@ -160,6 +165,18 @@ export default function UserHomePage() {
           </div>
         </div>
       </section>
+
+    {/* Featured brands */}
+    <Brands/>
+
+    {/* discounts */}
+    
+    <section>
+      <div>
+        
+      </div>
+    </section>
+
     </main>
 
   );
