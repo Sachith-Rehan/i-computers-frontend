@@ -42,7 +42,7 @@ export default function ProductPage() {
                               {products.map((product) => (
                                     <ProductCard
                                           key={product._id}
-                                          product={product}
+                                          product={ product }
                                     />
                               ))}
 
