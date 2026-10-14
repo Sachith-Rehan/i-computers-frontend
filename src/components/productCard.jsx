@@ -1,120 +1,179 @@
+
 import getFormattedPrice from "../utils/priceFormatter";
 import { Link } from "react-router-dom";
 
 export default function ProductCard({ product }) {
+  const firstImage = product.images?.[0];
 
-    const imageUrl =
-        product.images?.[0]?.url ||
-        product.images?.[0] ||
-        "/placeholder.png";
+  const imageUrl =
+    (typeof firstImage === "string"
+      ? firstImage
+      : firstImage?.url) || "/placeholder.png";
 
-    const discount =
-        product.labelledPrice > product.price
-            ? Math.round(
-                ((product.labelledPrice - product.price) /
-                    product.labelledPrice) *
-                    100
-              )
-            : 0;
+  const price = Number(product.price) || 0;
+  const labelledPrice = Number(product.labelledPrice) || 0;
 
-    const isAvailable =
-        product.isAvailable === true &&
-        Number(product.stock) > 0;
+  const discount =
+    labelledPrice > price
+      ? Math.round(
+          ((labelledPrice - price) / labelledPrice) * 100
+        )
+      : 0;
 
+  const isAvailable =
+    product.isAvailable === true &&
+    Number(product.stock) > 0;
 
-    return (
-        <div className="group w-full max-w-[280px] h-[520px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col">
+  return (
+    <article className="group relative flex h-[530px] w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-[#14171e] shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-1.5 hover:border-blue-500/40 hover:shadow-[0_20px_45px_rgba(0,0,0,0.3)]">
 
-            {/* Product Image */}
-            <div className="relative h-[220px] bg-gray-50 flex items-center justify-center overflow-hidden shrink-0">
+      {/* Product Image Section */}
+      <div className="relative h-[235px] w-full shrink-0 overflow-hidden bg-[#f3f4f6]">
 
-                <img
-                    src={imageUrl}
-                    alt={product.name}
-                    className="w-full h-full object-contain p-5 group-hover:scale-105 transition-transform duration-300"
-                />
+        {/* Subtle Image Background */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,white_0%,#f3f4f6_75%)]" />
 
-                {/* Discount */}
-                {discount > 0 && (
-                    <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                        {discount}% OFF
-                    </span>
-                )}
+        {/* Product Image */}
+        <img
+          src={imageUrl}
+          alt={product.name}
+          loading="lazy"
+          onError={(e) => {
+            if (!e.currentTarget.src.endsWith("/placeholder.png")) {
+              e.currentTarget.src = "/placeholder.png";
+            }
+          }}
+          className="relative h-full w-full object-contain p-3 transition-transform duration-500 ease-out group-hover:scale-110 motion-reduce:transform-none"
+        />
 
-                {/* Availability */}
-                {!isAvailable && (
-                    <span className="absolute top-3 right-3 bg-red-100 text-red-600 text-xs font-semibold px-3 py-1 rounded-full">
-                        Out of Stock
-                    </span>
-                )}
+        {/* Top Badges */}
+        <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-2 p-3">
 
-            </div>
+          {/* Discount Badge */}
+          {discount > 0 ? (
+            <span className="inline-flex items-center rounded-lg bg-red-500 px-2.5 py-1.5 text-[10px] font-bold tracking-wide text-white shadow-sm">
+              -{discount}% OFF
+            </span>
+          ) : (
+            <span />
+          )}
 
+          {/* Stock Badge */}
+          <span
+            className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[10px] font-semibold shadow-sm backdrop-blur-md ${
+              isAvailable
+                ? "border-emerald-200 bg-white/90 text-emerald-700"
+                : "border-red-200 bg-white/90 text-red-600"
+            }`}
+          >
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${
+                isAvailable
+                  ? "bg-emerald-500"
+                  : "bg-red-500"
+              }`}
+            />
 
-            {/* Product Details */}
-            <div className="p-5 flex flex-col flex-1">
-
-                {/* Category */}
-                {product.category && (
-                    <p className="text-xs font-semibold text-accent uppercase mb-1">
-                        {product.category}
-                    </p>
-                )}
-
-
-                {/* Product Name */}
-                <h2 className="text-lg font-semibold text-gray-900 line-clamp-2 min-h-[56px]">
-                    {product.name}
-                </h2>
-
-
-                {/* Short Description */}
-                <p className="text-sm text-gray-500 mt-2 line-clamp-2">
-                    {product.description}
-                </p>
-
-
-                {/* Bottom Section */}
-                <div className="mt-auto">
-
-                    {/* Price */}
-                    {/* Price */}
-                    <div className="flex flex-col">
-
-                        <span className="text-xl font-bold text-accent">
-                            {getFormattedPrice(product.price)}
-                        </span>
-
-                        {product.labelledPrice > product.price && (
-                            <span className="text-sm text-gray-400 line-through mt-1">
-                                {getFormattedPrice(product.labelledPrice)}
-                            </span>
-                        )}
-
-                    </div>
-
-
-                    {/* Button */}
-                    <Link
-                        to={ `/overview/${product.productId}` }
-                        onClick={(e) => {
-                            if (!isAvailable) {
-                                e.preventDefault();
-                            }
-                        }}
-                        className={`w-full mt-5 py-2.5 rounded-xl font-semibold text-center block transition ${
-                            isAvailable
-                                ? "bg-accent text-white hover:opacity-90"
-                                : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                        }`}
-                    >
-                        {isAvailable ? "View Product" : "Out of Stock"}
-                    </Link>
-
-                </div>
-
-            </div>
+            {isAvailable ? "In Stock" : "Out of Stock"}
+          </span>
 
         </div>
-    );
+
+        {/* Image Bottom Accent */}
+        <div className="pointer-events-none absolute bottom-0 left-0 h-[2px] w-full bg-gradient-to-r from-transparent via-blue-500/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+      </div>
+
+      {/* Product Details */}
+      <div className="flex min-h-0 flex-1 flex-col bg-[#14171e] p-4 sm:p-5">
+
+        {/* Category */}
+        <div className="mb-2 flex items-center gap-2">
+
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue-400" />
+
+          <p className="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-blue-400">
+            {product.category || "Technology"}
+          </p>
+
+        </div>
+
+        {/* Product Name */}
+        <h2 className="line-clamp-2 min-h-[44px] text-sm font-semibold leading-[22px] tracking-tight text-white transition-colors duration-300 group-hover:text-blue-400 sm:text-base">
+          {product.name}
+        </h2>
+
+        {/* Description */}
+        <p className="mt-2 line-clamp-2 text-xs leading-5 text-zinc-400">
+          {product.description ||
+            "Discover performance, quality, and innovation."}
+        </p>
+
+        {/* Price + Action */}
+        <div className="mt-auto pt-3">
+
+          <div className="mb-3 h-px w-full bg-white/[0.08]" />
+
+          {/* Price Area */}
+          <div className="flex min-h-[48px] items-center justify-between gap-2">
+
+            <div className="min-w-0">
+
+              <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-500">
+                Price
+              </p>
+
+              <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+
+                <span className="text-lg font-bold tracking-tight text-white sm:text-xl">
+                  {getFormattedPrice(price)}
+                </span>
+
+                {labelledPrice > price && (
+                  <span className="text-[11px] text-zinc-500 line-through">
+                    {getFormattedPrice(labelledPrice)}
+                  </span>
+                )}
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* CTA Button */}
+          {isAvailable ? (
+            <Link
+              to={`/overview/${product.productId}`}
+              aria-label={`View ${product.name}`}
+              className="group/btn mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-xs font-bold tracking-wide text-white transition-all duration-300 hover:bg-blue-500 hover:shadow-[0_6px_24px_rgba(37,99,235,0.3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+            >
+              View Product
+
+              <svg
+                className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+
+            </Link>
+          ) : (
+            <div className="mt-3 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-white/5 bg-white/[0.05] px-4 py-3 text-xs font-semibold text-zinc-500">
+              Currently Unavailable
+            </div>
+          )}
+
+        </div>
+
+      </div>
+
+    </article>
+  );
 }

@@ -172,8 +172,9 @@ export default function UserHomePage() {
     
     <section>
       <div>
-        <GetProductByCategory category="other" />
-        
+        <GetProductByCategory category="processor" />
+        <GetProductByCategory category="graphic card" />
+        <GetProductByCategory category="cooling" />
 
         
       </div>
