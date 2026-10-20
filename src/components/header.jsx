@@ -6,6 +6,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+
 import {
   FiSearch,
   FiShoppingCart,
@@ -17,7 +18,7 @@ import {
 } from "react-icons/fi";
 
 const categories = [
-  { label: "Laptops", value: "laptops" },
+  { label: "Laptops", value: "laptop" },
   { label: "Graphics Cards", value: "graphic card" },
   { label: "Processors", value: "processor" },
   { label: "Motherboards", value: "motherboard" },
@@ -31,13 +32,21 @@ const categories = [
   { label: "Power Supplies", value: "power supply" },
   { label: "PC Cases", value: "case" },
   { label: "Cooling", value: "cooling" },
+  { label: "Other", value: "other" },
 ];
 
 const navLinks = [
   { label: "Home", to: "/", end: true },
-  { label: "All Products", to: "/products" },
+  { label: "All Products", to: "/products", end: true },
   { label: "Contact Us", to: "/contact-us" },
 ];
+
+function getCategoryUrl(category) {
+  const params = new URLSearchParams();
+  params.set("category", category);
+
+  return `/products?${params.toString()}`;
+}
 
 export default function Header({ cartCount = 0 }) {
   const navigate = useNavigate();
@@ -61,22 +70,22 @@ export default function Header({ cartCount = 0 }) {
   }, [location.pathname, location.search]);
 
   useEffect(() => {
-    function handleEscape(event) {
+    const handleEscape = (event) => {
       if (event.key === "Escape") {
         setMenuOpen(false);
         setCategoriesOpen(false);
         setMobileSearchOpen(false);
       }
-    }
+    };
 
-    function handleOutsideClick(event) {
+    const handleOutsideClick = (event) => {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target)
       ) {
         setCategoriesOpen(false);
       }
-    }
+    };
 
     document.addEventListener("keydown", handleEscape);
     document.addEventListener("mousedown", handleOutsideClick);
@@ -90,7 +99,7 @@ export default function Header({ cartCount = 0 }) {
     };
   }, []);
 
-  function handleSearch(event) {
+  const handleSearch = (event) => {
     event.preventDefault();
 
     const keyword = search.trim();
@@ -107,32 +116,31 @@ export default function Header({ cartCount = 0 }) {
     setMenuOpen(false);
     setMobileSearchOpen(false);
     setCategoriesOpen(false);
-  }
+  };
 
   const desktopNavClass = ({ isActive }) =>
-    `group relative flex h-full items-center text-[13px] font-medium transition-colors duration-200 ${
+    `group relative flex h-full items-center text-[13px] font-medium transition-colors ${
       isActive
         ? "text-blue-400"
         : "text-zinc-400 hover:text-white"
     }`;
 
   const mobileNavClass = ({ isActive }) =>
-    `flex items-center justify-between border-l-2 px-4 py-3 text-sm font-medium transition-all duration-200 ${
+    `flex items-center justify-between rounded-lg px-4 py-3 text-sm font-medium transition ${
       isActive
-        ? "border-blue-500 bg-blue-500/10 text-blue-400"
-        : "border-transparent text-zinc-300 hover:border-blue-500/50 hover:bg-white/5 hover:text-white"
+        ? "bg-blue-500/10 text-blue-400"
+        : "text-zinc-300 hover:bg-white/5 hover:text-white"
     }`;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#0b0e14]/95 text-white shadow-[0_8px_30px_rgba(0,0,0,0.2)] backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#0b0e14]/95 text-white shadow-xl shadow-black/20 backdrop-blur-xl">
 
-      {/* Blue Top Accent */}
-      <div className="h-[2px] w-full bg-gradient-to-r from-blue-700 via-blue-500 to-blue-700" />
+      <div className="h-[2px] bg-gradient-to-r from-blue-700 via-blue-500 to-blue-700" />
 
-      {/* Main Header */}
+      {/* MAIN HEADER */}
       <div className="mx-auto flex h-[72px] max-w-[1600px] items-center justify-between gap-4 px-4 sm:h-[78px] sm:px-6 lg:px-10">
 
-        {/* Logo */}
+        {/* LOGO */}
         <Link
           to="/"
           aria-label="iComputers Home"
@@ -145,133 +153,111 @@ export default function Header({ cartCount = 0 }) {
           />
         </Link>
 
-        {/* Desktop Search Bar */}
+        {/* DESKTOP SEARCH */}
         <form
           onSubmit={handleSearch}
           role="search"
-          className="hidden min-w-0 max-w-[540px] flex-1 items-center border border-white/10 bg-[#151922] transition-colors duration-200 focus-within:border-blue-500/60 md:flex"
+          className="hidden min-w-0 max-w-[540px] flex-1 items-center overflow-hidden rounded-xl border border-white/10 bg-[#151922] transition focus-within:border-blue-500/60 md:flex"
         >
           <FiSearch className="ml-4 shrink-0 text-lg text-blue-400" />
 
           <input
             type="search"
             value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search laptops, monitors, graphics cards..."
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search computers, monitors, components..."
             aria-label="Search products"
-            className="h-[44px] min-w-0 flex-1 bg-transparent px-3 text-sm text-white outline-none placeholder:text-zinc-500"
+            className="h-11 min-w-0 flex-1 bg-transparent px-3 text-sm text-white outline-none placeholder:text-zinc-500"
           />
 
           <button
             type="submit"
-            className="flex h-[44px] shrink-0 items-center justify-center gap-2 border-l border-blue-500/40 bg-blue-600 px-5 text-xs font-semibold text-white transition-colors hover:bg-blue-500"
+            className="flex h-11 shrink-0 items-center gap-2 bg-blue-600 px-5 text-xs font-semibold transition hover:bg-blue-500"
           >
             Search
-            <FiArrowRight size={15} />
+            <FiArrowRight />
           </button>
         </form>
 
-        {/* Right Actions */}
+        {/* HEADER ACTIONS */}
         <div className="flex shrink-0 items-center gap-2">
 
-          {/* Mobile Search */}
           <button
             type="button"
-            aria-label={
-              mobileSearchOpen ? "Close search" : "Open search"
-            }
+            aria-label="Toggle search"
             aria-expanded={mobileSearchOpen}
             onClick={() => {
               setMobileSearchOpen((prev) => !prev);
               setMenuOpen(false);
             }}
-            className="flex h-10 w-10 items-center justify-center border border-white/10 bg-white/[0.03] text-zinc-300 transition-all hover:border-blue-500/40 hover:bg-blue-500/10 hover:text-blue-400 md:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-zinc-300 hover:text-blue-400 md:hidden"
           >
-            {mobileSearchOpen ? (
-              <FiX size={20} />
-            ) : (
-              <FiSearch size={20} />
-            )}
+            {mobileSearchOpen ? <FiX size={20} /> : <FiSearch size={20} />}
           </button>
 
-          {/* Cart */}
           <Link
             to="/cart"
             aria-label={`Shopping cart, ${itemCount} items`}
-            className="group relative flex h-10 w-10 items-center justify-center border border-white/10 bg-white/[0.03] text-zinc-200 transition-all hover:border-blue-500/50 hover:bg-blue-500/10 hover:text-blue-400 sm:h-11 sm:w-11"
+            className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-zinc-200 transition hover:border-blue-500/40 hover:text-blue-400"
           >
-            <FiShoppingCart
-              size={20}
-              className="transition-transform duration-200 group-hover:scale-110"
-            />
+            <FiShoppingCart size={20} />
 
             {itemCount > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex min-h-5 min-w-5 items-center justify-center border-2 border-[#0b0e14] bg-blue-600 px-1 text-[10px] font-bold text-white">
+              <span className="absolute -right-1.5 -top-1.5 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold text-white">
                 {itemCount > 99 ? "99+" : itemCount}
               </span>
             )}
           </Link>
 
-          {/* Mobile Menu */}
           <button
             type="button"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-label="Toggle mobile menu"
             aria-expanded={menuOpen}
             onClick={() => {
               setMenuOpen((prev) => !prev);
               setMobileSearchOpen(false);
             }}
-            className="flex h-10 w-10 items-center justify-center border border-white/10 bg-white/[0.03] text-white transition-all hover:border-blue-500/40 hover:bg-white/10 sm:h-11 sm:w-11 md:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 md:hidden"
           >
-            {menuOpen ? (
-              <FiX size={22} />
-            ) : (
-              <FiMenu size={22} />
-            )}
+            {menuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
           </button>
-
         </div>
       </div>
 
-      {/* Mobile Search Panel */}
+      {/* MOBILE SEARCH */}
       {mobileSearchOpen && (
         <div className="border-t border-white/10 bg-[#10141c] px-4 py-3 md:hidden">
-
           <form
             onSubmit={handleSearch}
             role="search"
-            className="flex items-center border border-white/10 bg-[#171c26] focus-within:border-blue-500/50"
+            className="flex overflow-hidden rounded-xl border border-white/10 bg-[#171c26] focus-within:border-blue-500/50"
           >
-            <FiSearch className="ml-3 shrink-0 text-lg text-blue-400" />
+            <FiSearch className="ml-3 self-center text-lg text-blue-400" />
 
             <input
               type="search"
               value={search}
-              onChange={(event) => setSearch(event.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search products..."
-              aria-label="Search products"
-              className="h-11 min-w-0 flex-1 bg-transparent px-3 text-sm text-white outline-none placeholder:text-zinc-500"
+              className="h-11 min-w-0 flex-1 bg-transparent px-3 text-sm text-white outline-none"
             />
 
             <button
               type="submit"
-              className="h-11 bg-blue-600 px-5 text-xs font-bold text-white transition-colors hover:bg-blue-500"
+              className="bg-blue-600 px-5 text-xs font-semibold"
             >
               Search
             </button>
           </form>
-
         </div>
       )}
 
-      {/* Desktop Navigation */}
+      {/* DESKTOP NAVIGATION */}
       <div className="hidden border-t border-white/[0.07] bg-[#10141c] md:block">
-
         <div className="mx-auto flex h-[50px] max-w-[1600px] items-center justify-between gap-6 px-4 sm:px-6 lg:px-10">
 
           <div className="flex h-full items-center gap-8">
 
-            {/* Category Menu */}
             <div
               ref={dropdownRef}
               className="relative flex h-full items-center"
@@ -280,36 +266,31 @@ export default function Header({ cartCount = 0 }) {
                 type="button"
                 aria-expanded={categoriesOpen}
                 aria-haspopup="true"
-                onClick={() =>
-                  setCategoriesOpen((prev) => !prev)
-                }
-                className={`flex h-full items-center gap-2 border-b-2 text-[13px] font-semibold transition-colors ${
+                onClick={() => setCategoriesOpen((prev) => !prev)}
+                className={`flex h-full items-center gap-2 border-b-2 text-[13px] font-semibold transition ${
                   categoriesOpen
                     ? "border-blue-500 text-blue-400"
-                    : "border-transparent text-white hover:text-blue-400"
+                    : "border-transparent hover:text-blue-400"
                 }`}
               >
                 <FiGrid className="text-base text-blue-400" />
-
                 Categories
 
                 <FiChevronDown
                   size={14}
-                  className={`transition-transform duration-200 ${
+                  className={`transition-transform ${
                     categoriesOpen ? "rotate-180" : ""
                   }`}
                 />
               </button>
 
-              {/* Category Dropdown */}
+              {/* CATEGORY DROPDOWN */}
               {categoriesOpen && (
-                <div className="absolute left-0 top-full z-50 w-[480px] border border-white/10 bg-[#131822] shadow-[0_25px_60px_rgba(0,0,0,0.55)]">
+                <div className="absolute left-0 top-full z-50 w-[490px] overflow-hidden rounded-b-2xl border border-white/10 bg-[#131822] shadow-2xl shadow-black/60">
 
-                  {/* Dropdown Heading */}
                   <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-
                     <div>
-                      <p className="text-sm font-semibold text-white">
+                      <p className="text-sm font-semibold">
                         Shop by Category
                       </p>
 
@@ -326,39 +307,28 @@ export default function Header({ cartCount = 0 }) {
                       View All
                       <FiArrowRight size={14} />
                     </Link>
-
                   </div>
 
-                  {/* Categories Grid */}
                   <div className="grid grid-cols-2 gap-px bg-white/[0.06]">
-
                     {categories.map((category) => (
                       <Link
                         key={category.value}
-                        to={`/products?category=${encodeURIComponent(
-                          category.value
-                        )}`}
+                        to={getCategoryUrl(category.value)}
                         onClick={() => setCategoriesOpen(false)}
-                        className="group/item flex items-center justify-between gap-2 bg-[#131822] px-5 py-3.5 text-xs font-medium text-zinc-300 transition-colors duration-200 hover:bg-[#1c2638] hover:text-blue-400"
+                        className="group flex items-center justify-between gap-2 bg-[#131822] px-5 py-3.5 text-xs font-medium text-zinc-300 transition hover:bg-[#1c2638] hover:text-blue-400"
                       >
-                        <span>{category.label}</span>
+                        {category.label}
 
-                        <FiArrowRight className="shrink-0 -translate-x-1 opacity-0 transition-all group-hover/item:translate-x-0 group-hover/item:opacity-100" />
+                        <FiArrowRight className="shrink-0 opacity-0 transition group-hover:opacity-100" />
                       </Link>
                     ))}
-
                   </div>
-
-                  <div className="h-[2px] bg-blue-500/60" />
-
                 </div>
               )}
-
             </div>
 
             <div className="h-5 w-px bg-white/10" />
 
-            {/* Desktop Links */}
             <nav
               aria-label="Main navigation"
               className="flex h-full items-center gap-8"
@@ -375,7 +345,7 @@ export default function Header({ cartCount = 0 }) {
                       {link.label}
 
                       <span
-                        className={`absolute bottom-0 left-0 h-[2px] w-full bg-blue-500 transition-transform duration-200 ${
+                        className={`absolute bottom-0 left-0 h-[2px] w-full bg-blue-500 transition-transform ${
                           isActive
                             ? "scale-x-100"
                             : "scale-x-0 group-hover:scale-x-100"
@@ -386,26 +356,18 @@ export default function Header({ cartCount = 0 }) {
                 </NavLink>
               ))}
             </nav>
-
           </div>
 
-          {/* Desktop Tagline */}
-          <div className="hidden items-center gap-2 lg:flex">
-            <span className="h-1.5 w-1.5 bg-blue-500" />
-
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-zinc-500">
-              Built for Performance
-            </span>
-          </div>
-
+          <span className="hidden text-[11px] font-medium uppercase tracking-widest text-zinc-500 lg:block">
+            Built for Performance
+          </span>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* MOBILE NAVIGATION */}
       {menuOpen && (
-        <div className="absolute left-0 top-full z-50 max-h-[calc(100dvh-74px)] w-full overflow-y-auto border-t border-white/10 bg-[#10141c] shadow-[0_20px_40px_rgba(0,0,0,0.5)] md:hidden">
+        <div className="absolute left-0 top-full z-50 max-h-[calc(100dvh-74px)] w-full overflow-y-auto border-t border-white/10 bg-[#10141c] shadow-2xl shadow-black/50 md:hidden">
 
-          {/* Navigation Links */}
           <nav
             aria-label="Mobile navigation"
             className="flex flex-col gap-1 px-4 py-5"
@@ -419,51 +381,32 @@ export default function Header({ cartCount = 0 }) {
                 className={mobileNavClass}
               >
                 {link.label}
-
                 <FiArrowRight size={15} />
               </NavLink>
             ))}
           </nav>
 
-          {/* Mobile Categories */}
           <div className="border-t border-white/10 px-4 py-5">
+            <h3 className="mb-5 flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
+              <FiGrid className="text-blue-400" />
+              Shop by Category
+            </h3>
 
-            <div className="mb-5 flex items-center gap-3">
-              <div className="h-5 w-[2px] bg-blue-500" />
-
-              <h3 className="text-xs font-bold uppercase tracking-[0.18em] text-white">
-                Shop by Category
-              </h3>
-            </div>
-
-            <div className="grid grid-cols-2 gap-px border border-white/10 bg-white/10">
-
+            <div className="grid grid-cols-2 gap-2">
               {categories.map((category) => (
                 <Link
                   key={category.value}
-                  to={`/products?category=${encodeURIComponent(
-                    category.value
-                  )}`}
+                  to={getCategoryUrl(category.value)}
                   onClick={() => setMenuOpen(false)}
-                  className="bg-[#151a24] px-4 py-3.5 text-xs font-medium text-zinc-300 transition-colors hover:bg-blue-500/10 hover:text-blue-400"
+                  className="rounded-lg border border-white/10 bg-[#151a24] px-4 py-3.5 text-xs font-medium text-zinc-300 transition hover:border-blue-500/30 hover:text-blue-400"
                 >
                   {category.label}
                 </Link>
               ))}
-
             </div>
           </div>
-
-          {/* Mobile Footer */}
-          <div className="border-t border-white/10 px-4 py-5 text-center">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-zinc-500">
-              iComputers — Built for Performance
-            </p>
-          </div>
-
         </div>
       )}
-
     </header>
   );
 }
