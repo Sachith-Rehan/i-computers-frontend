@@ -7,6 +7,7 @@ import CheckoutPage from "./checkoutPage";
 import Footer from "../components/footer";
 import HomeSlideShow from "../components/homePageSlideShow";
 import UserHomePage from "./userHomePage";
+import ContactUsPage from "./conatactUsPage";
 
 export default function HomePage() {
   return (
@@ -18,7 +19,7 @@ export default function HomePage() {
             <Routes>
               <Route path="/" element={<UserHomePage/>}/>
               <Route path="/products" element={<ProductPage/>}/>
-              <Route path="/contact-us" element={<p>contact-us</p>}/>
+              <Route path="/contact-us" element={<ContactUsPage/>}/>
               <Route path="/about-us" element={<p>about-us</p>}/>
               <Route path="/cart" element={<CartPage/>}/>
               <Route path="/checkout" element={<CheckoutPage/>}/>
