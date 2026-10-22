@@ -10,7 +10,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
-    
+    <h1>hellow world!</h1>
     
     <div className="w-full h-screen bg-red-500">
       <Toaster position='top-right'/>
